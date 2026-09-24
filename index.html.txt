@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Queen and Oil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --plum:#E7E1D5;
+    --plum-deep:#F1EDE4;
+    --gold:#9C7A1E;
+    --gold-soft:#B8934A;
+    --cream:#2B1F1A;
+    --line: rgba(43,27,46,0.16);
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:inherit; margin:0; padding:0;}
+  html{scroll-behavior:smooth; scroll-padding-top:env(safe-area-inset-top,0px);}
+  body{
+    background:var(--plum-deep);
+    color:var(--cream);
+    font-family:'Jost', sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+    position:relative;
+  }
+  body::before, body::after{
+    content:"";
+    position:fixed;
+    width:60vmax; height:60vmax;
+    border-radius:50%;
+    filter:blur(80px);
+    z-index:0;
+    pointer-events:none;
+    opacity:0.10;
+  }
+  body::before{
+    background:radial-gradient(circle, var(--gold) 0%, transparent 70%);
+    top:-20vmax; right:-15vmax;
+    animation:drift1 26s ease-in-out infinite alternate;
+  }
+  body::after{
+    background:radial-gradient(circle, #8B2E5A 0%, transparent 70%);
+    bottom:-25vmax; left:-20vmax;
+    animation:drift2 32s ease-in-out infinite alternate;
+  }
+  @keyframes drift1{
+    0%{transform:translate(0,0) scale(1);}
+    100%{transform:translate(-8vmax, 6vmax) scale(1.15);}
+  }
+  @keyframes drift2{
+    0%{transform:translate(0,0) scale(1);}
+    100%{transform:translate(6vmax, -8vmax) scale(1.1);}
+  }
+  header, .hero, section, footer{position:relative; z-index:1;}
+  @media (prefers-reduced-motion: reduce){
+    body::before, body::after{animation:none;}
+  }
+  h1,h2,h3{font-family:'Cormorant Garamond', serif; font-weight:600; letter-spacing:0.01em;}
+  a{color:inherit;}
+  .wrap{max-width:1100px; margin:0 auto; padding:0 28px;}
+
+  header{
+    position:sticky; top:0; top:env(safe-area-inset-top,0px);
+    z-index:10; background:rgba(242,238,231,0.88); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  header .wrap{display:flex; align-items:center; justify-content:space-between; padding-top:18px; padding-bottom:18px;}
+  .logo{font-family:'Cormorant Garamond', serif; font-size:1.5rem; font-style:italic; color:var(--gold-soft);}
+  nav{display:flex; gap:28px; font-size:0.92rem;}
+  nav a{text-decoration:none; opacity:0.85; transition:opacity .2s;}
+  nav a:hover{opacity:1; color:var(--gold-soft);}
+
+  .hero{
+    position:relative; padding:110px 0 100px;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 20%, rgba(201,162,39,0.14), transparent 60%),
+      linear-gradient(180deg, var(--plum) 0%, var(--plum-deep) 100%);
+    overflow:hidden;
+  }
+  .hero .wrap{display:grid; grid-template-columns:1.1fr 0.9fr; gap:50px; align-items:center;}
+  .hero h1{font-size:clamp(2.6rem, 5.5vw, 4.2rem); font-style:italic; line-height:1.08; color:var(--cream);}
+  .hero p.sub{margin-top:22px; font-size:1.08rem; max-width:44ch; color:rgba(43,27,46,0.78);}
+  .cta-row{margin-top:36px; display:flex; gap:16px; flex-wrap:wrap;}
+  .btn{
+    display:inline-block; padding:14px 30px; font-size:0.92rem; letter-spacing:0.03em;
+    border-radius:2px; text-decoration:none; transition:transform .2s, background .2s;
+  }
+  .btn-gold{background:var(--gold); color:var(--plum-deep); font-weight:500;}
+  .btn-gold:hover{background:var(--gold-soft); transform:translateY(-1px);}
+  .btn-ghost{border:1px solid var(--line); color:var(--cream);}
+  .btn-ghost:hover{border-color:var(--gold-soft); color:var(--gold-soft);}
+
+  .bottle{
+    justify-self:center; width:100%; max-width:260px;
+  }
+  .bottle svg{width:100%; height:auto;}
+
+  section{padding:90px 0;}
+  .divider{height:1px; background:var(--line); max-width:1100px; margin:0 auto;}
+
+  .story .wrap{display:grid; grid-template-columns:0.9fr 1.1fr; gap:60px; align-items:start;}
+  .story h2{font-size:2.1rem; font-style:italic; color:var(--gold-soft); margin-bottom:20px;}
+  .story p{color:rgba(43,27,46,0.82); max-width:56ch;}
+  .story p + p{margin-top:16px;}
+
+  .features .head{max-width:60ch; margin-bottom:56px;}
+  .features h2{font-size:2.1rem; font-style:italic; color:var(--cream);}
+  .grid3{display:grid; grid-template-columns:repeat(3, 1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
+  .card{background:var(--plum-deep); padding:34px 30px;}
+  .card .num{font-family:'Cormorant Garamond', serif; font-style:italic; font-size:0.95rem; color:var(--gold);}
+  .card h3{font-size:1.35rem; margin-top:10px; margin-bottom:10px; color:var(--cream);}
+  .card p{font-size:0.94rem; color:rgba(43,27,46,0.72);}
+
+  .variants .head{max-width:60ch; margin-bottom:56px;}
+  .variants h2{font-size:2.1rem; font-style:italic; color:var(--cream);}
+  .vgrid{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border:1px solid var(--line);}
+  .vcard{background:var(--plum-deep); padding:40px 36px;}
+  .vcard .vart{width:120px; margin:0 auto 22px;}
+  .vcard .vart svg{width:100%; height:auto;}
+  .vcard h3{font-size:1.6rem; font-style:italic; text-align:center; margin-bottom:4px;}
+  .vcard .vtag{text-align:center; font-size:0.82rem; color:var(--gold-soft); margin-bottom:22px;}
+  .vcard ul{list-style:none;}
+  .vcard ul li{position:relative; padding:8px 0 8px 20px; font-size:0.92rem; color:rgba(43,27,46,0.8); border-top:1px solid var(--line);}
+  .vcard ul li:first-child{border-top:none;}
+  .vcard ul li::before{content:"—"; position:absolute; left:0; color:var(--gold);}
+  .sizes{display:flex; gap:12px; margin-top:22px;}
+  .size{flex:1; text-align:center; padding:14px 8px; border:1px solid var(--line); border-radius:2px; cursor:pointer; transition:border-color .2s, color .2s;}
+  .size.active{border-color:var(--gold); color:var(--gold-soft);}
+  .vcard .btn{width:100%; text-align:center; margin-top:18px;}
+  .size .ml{font-size:0.82rem; color:rgba(43,27,46,0.65); letter-spacing:0.03em;}
+  .size .price{font-family:'Cormorant Garamond', serif; font-style:italic; font-size:1.3rem; color:var(--gold-soft); margin-top:4px;}
+
+  .ritual{background:var(--plum);}
+  .ritual .wrap{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;}
+  .ritual h2{font-size:2.1rem; font-style:italic; color:var(--gold-soft); margin-bottom:24px;}
+  .steps{list-style:none; counter-reset:step;}
+  .steps li{counter-increment:step; padding:18px 0; border-top:1px solid var(--line); display:flex; gap:20px;}
+  .steps li:last-child{border-bottom:1px solid var(--line);}
+  .steps li::before{
+    content:counter(step);
+    font-family:'Cormorant Garamond', serif; font-style:italic; color:var(--gold);
+    font-size:1.3rem; flex:0 0 auto; width:28px;
+  }
+  .steps span{color:rgba(43,27,46,0.85);}
+
+  .quote{text-align:center; max-width:720px; margin:0 auto; padding:100px 28px;}
+  .quote p{font-family:'Cormorant Garamond', serif; font-style:italic; font-size:clamp(1.5rem,3vw,2rem); color:var(--gold-soft); line-height:1.4;}
+  .quote span{display:block; margin-top:22px; font-family:'Jost'; font-style:normal; font-size:0.85rem; color:rgba(43,27,46,0.6); letter-spacing:0.04em;}
+
+  .gift{background:var(--plum);}
+  .gift .wrap{display:grid; grid-template-columns:0.85fr 1.15fr; gap:60px; align-items:center;}
+  .gift-art{justify-self:center; width:100%; max-width:280px;}
+  .gift-art svg{width:100%; height:auto;}
+  .gift h2{font-size:2.1rem; font-style:italic; color:var(--gold-soft); margin-bottom:18px;}
+  .gift p{color:rgba(43,27,46,0.78); max-width:48ch;}
+  .gift p + p{margin-top:14px;}
+  .gift .btn{margin-top:28px; display:inline-block;}
+
+  .cart-list{margin-top:18px;}
+  .cart-item{display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-top:1px solid var(--line); font-size:0.9rem;}
+  .cart-item:first-child{border-top:none;}
+  .cart-item .ci-name{color:var(--cream);}
+  .cart-item .ci-name .qty{color:rgba(43,27,46,0.55); font-size:0.82rem;}
+  .cart-item .ci-right{display:flex; align-items:center; gap:12px;}
+  .cart-item .ci-price{color:rgba(43,27,46,0.7);}
+  .cart-item .ci-remove{cursor:pointer; color:var(--gold); font-size:0.8rem; border:1px solid var(--line); padding:3px 8px;}
+  .cart-empty{font-size:0.85rem; color:rgba(43,27,46,0.5); padding:10px 0;}
+
+  .cart-link{
+    display:flex; align-items:center; gap:6px; text-decoration:none; color:var(--cream);
+    font-size:0.9rem; border:1px solid var(--line); padding:8px 14px;
+  }
+  .cart-link .badge{
+    background:var(--gold); color:var(--plum-deep); border-radius:50%;
+    width:18px; height:18px; display:flex; align-items:center; justify-content:center;
+    font-size:0.72rem; font-family:'Jost';
+  }
+
+  .gift-toggle{display:flex; align-items:center; gap:12px; padding:16px 0; border-top:1px solid var(--line); cursor:pointer; user-select:none;}
+  .gift-toggle .box{
+    width:20px; height:20px; border:1px solid var(--gold); flex:0 0 auto;
+    display:flex; align-items:center; justify-content:center; font-size:0.8rem; color:var(--gold);
+  }
+  .gift-toggle.on .box{background:var(--gold); color:var(--plum-deep);}
+  .gift-toggle span{font-size:0.9rem; color:var(--cream);}
+  .gift-fields{display:none; margin-top:4px;}
+  .gift-fields.show{display:block;}
+
+  .checkout{background:var(--plum-deep);}
+  .checkout .head{max-width:60ch; margin-bottom:44px;}
+  .checkout h2{font-size:2.1rem; font-style:italic; color:var(--gold-soft);}
+  .pay-card{
+    max-width:520px; margin:0 auto; border:1px solid var(--line);
+    padding:38px 34px; background:var(--plum);
+  }
+  .pay-card .row{display:flex; justify-content:space-between; padding:12px 0; border-top:1px solid var(--line); font-size:0.95rem;}
+  .pay-card .row:first-child{border-top:none;}
+  .pay-card .label{color:rgba(43,27,46,0.6);}
+  .pay-card .value{font-family:'Cormorant Garamond', serif; font-style:italic; color:var(--cream); font-size:1.1rem; letter-spacing:0.02em;}
+  .pay-note{text-align:center; margin-top:24px; font-size:0.85rem; color:rgba(43,27,46,0.55); max-width:46ch; margin-left:auto; margin-right:auto;}
+
+  .order-box{
+    max-width:520px; margin:0 auto 40px; border:1px solid var(--line);
+    padding:38px 34px; background:var(--plum);
+  }
+  .order-box .field{margin-bottom:24px;}
+  .order-box .field-label{font-size:0.82rem; color:rgba(43,27,46,0.6); letter-spacing:0.02em; margin-bottom:12px;}
+  .opt-row{display:flex; gap:10px;}
+  .opt{
+    flex:1; text-align:center; padding:12px 8px; border:1px solid var(--line);
+    cursor:pointer; font-size:0.92rem; color:rgba(43,27,46,0.75);
+    transition:border-color .2s, color .2s; user-select:none;
+  }
+  .opt.active{border-color:var(--gold); color:var(--gold-soft);}
+  .order-total{
+    display:flex; justify-content:space-between; align-items:baseline;
+    padding-top:22px; margin-top:22px; border-top:1px solid var(--line);
+  }
+  .order-total .label{font-size:0.9rem; color:rgba(43,27,46,0.65);}
+  .order-total .amt{font-family:'Cormorant Garamond', serif; font-style:italic; font-size:2rem; color:var(--gold-soft);}
+  .order-box .btn{width:100%; text-align:center; margin-top:24px;}
+  .order-box input, .order-box textarea{
+    width:100%; background:var(--plum-deep); border:1px solid var(--line); color:var(--cream);
+    font-family:'Jost', sans-serif; font-size:0.92rem; padding:12px 14px; margin-bottom:12px;
+  }
+  .order-box input:focus, .order-box textarea:focus{outline:none; border-color:var(--gold);}
+  .order-msg{text-align:center; margin-top:16px; font-size:0.88rem; color:var(--gold-soft); display:none;}
+  .order-box.submitted .order-msg{display:block;}
+
+  .admin-panel{max-width:640px; margin:0 auto; border:1px solid var(--line); padding:30px 30px; background:var(--plum); display:none;}
+  .admin-panel.show{display:block;}
+  .admin-panel h3{font-size:1.2rem; font-style:italic; color:var(--gold-soft); margin-bottom:16px;}
+  .admin-row{display:flex; justify-content:space-between; gap:12px; padding:10px 0; border-top:1px solid var(--line); font-size:0.85rem;}
+  .admin-row:first-child{border-top:none;}
+  .admin-row .who{color:var(--cream);}
+  .admin-row .what{color:rgba(43,27,46,0.6); text-align:right;}
+
+  .cta-band{background:linear-gradient(135deg, var(--plum) 0%, var(--plum-deep) 100%); text-align:center;}
+  .cta-band h2{font-size:2.4rem; font-style:italic; color:var(--cream); margin-bottom:18px;}
+  .cta-band p{color:rgba(43,27,46,0.75); max-width:46ch; margin:0 auto 34px;}
+
+  footer{padding:40px 0 calc(40px + env(safe-area-inset-bottom,0px)); border-top:1px solid var(--line);}
+  footer .wrap{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;}
+  footer .logo{font-size:1.2rem;}
+  footer .fine{font-size:0.82rem; color:rgba(43,27,46,0.5);}
+
+  @media (max-width:760px){
+    .hero .wrap, .story .wrap, .ritual .wrap, .gift .wrap{grid-template-columns:1fr; text-align:left;}
+    .gift-art{order:-1; max-width:200px; margin:0 auto 24px;}
+    .bottle{order:-1; max-width:180px; margin:0 auto 30px;}
+    .grid3{grid-template-columns:1fr;}
+    .vgrid{grid-template-columns:1fr;}
+    nav{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo">Queen &amp; Oil</div>
+    <nav>
+      <a href="#story">Our Story</a>
+      <a href="#features">Ingredients</a>
+      <a href="#variants">Flavors</a>
+      <a href="#ritual">Ritual</a>
+      <a href="#gift">Gift</a>
+      <a href="#checkout">Checkout</a>
+    </nav>
+    <a href="#checkout" class="cart-link">Cart <span class="badge" id="cartCount">0</span></a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <h1>Crowned by every strand.</h1>
+      <p class="sub">A regal blend of cold-pressed botanicals, made for hair that carries itself like it knows its worth.</p>
+      <div class="cta-row">
+        <a href="#checkout" class="btn btn-gold">Order the Oil</a>
+        <a href="#gift" class="btn btn-ghost">Send as a Gift</a>
+      </div>
+    </div>
+    <div class="bottle">
+      <svg viewBox="0 0 200 340" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#3a2440"/>
+            <stop offset="100%" stop-color="#1A1015"/>
+          </linearGradient>
+        </defs>
+        <rect x="60" y="10" width="80" height="40" rx="6" fill="#C9A227"/>
+        <rect x="70" y="0" width="60" height="16" rx="3" fill="#E3C572"/>
+        <path d="M50 50 h100 v230 a50 50 0 0 1 -50 50 a50 50 0 0 1 -50 -50 z" fill="url(#glass)" stroke="#C9A227" stroke-width="1.5"/>
+        <ellipse cx="100" cy="210" rx="42" ry="60" fill="none" stroke="#E3C572" stroke-width="0.75" opacity="0.5"/>
+        <text x="100" y="200" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="17" fill="#E3C572">Queen</text>
+        <text x="100" y="222" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="17" fill="#E3C572">&amp; Oil</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="story" id="story">
+  <div class="wrap">
+    <h2>Made to be inherited.</h2>
+    <div>
+      <p>Queen &amp; Oil began with a single kitchen-counter blend — a mix of oils passed down through generations, remade for modern hair and modern routines.</p>
+      <p>Every bottle is cold-pressed in small batches, free of fillers and fragrance shortcuts. Just the oils that have earned their place, in ratios that took years to get right.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="features" id="features">
+  <div class="wrap">
+    <div class="head">
+      <h2>What's in the bottle</h2>
+    </div>
+    <div class="grid3">
+      <div class="card">
+        <div class="num">I.</div>
+        <h3>Cold-Pressed Castor</h3>
+        <p>The base note — rich, slow-absorbing, built for growth and strength at the root.</p>
+      </div>
+      <div class="card">
+        <div class="num">II.</div>
+        <h3>Rosemary &amp; Amla</h3>
+        <p>A brightening pair that revives scalp circulation and restores natural shine.</p>
+      </div>
+      <div class="card">
+        <div class="num">III.</div>
+        <h3>Vitamin E Seal</h3>
+        <p>Locks moisture in, keeps the blend stable, and protects against everyday damage.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="variants" id="variants">
+  <div class="wrap">
+    <div class="head">
+      <h2>Two flavors, one crown</h2>
+    </div>
+    <div class="vgrid">
+
+      <div class="vcard">
+        <div class="vart">
+          <svg viewBox="0 0 160 280" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="amlaGlass" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#3d4a1e"/>
+                <stop offset="100%" stop-color="#1A1015"/>
+              </linearGradient>
+            </defs>
+            <rect x="48" y="8" width="64" height="32" rx="5" fill="#C9A227"/>
+            <path d="M40 40 h80 v190 a40 40 0 0 1 -40 40 a40 40 0 0 1 -40 -40 z" fill="url(#amlaGlass)" stroke="#8FA84A" stroke-width="1.5"/>
+            <circle cx="80" cy="150" r="22" fill="none" stroke="#C7D98C" stroke-width="1" opacity="0.7"/>
+            <circle cx="80" cy="150" r="14" fill="#8FA84A" opacity="0.85"/>
+            <text x="80" y="200" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="14" fill="#C7D98C">Amla</text>
+          </svg>
+        </div>
+        <h3>Amla</h3>
+        <div class="vtag">The strengthener</div>
+        <ul>
+          <li>Rich in vitamin C — fortifies strands from root to tip</li>
+          <li>Reduces breakage and split ends over time</li>
+          <li>Deepens natural color and adds visible shine</li>
+          <li>Soothes an itchy or dry scalp</li>
+        </ul>
+        <div class="sizes" id="amlaSizes">
+          <div class="size active" data-size="100ml" data-price="299"><div class="ml">100ml</div><div class="price">₹299</div></div>
+          <div class="size" data-size="200ml" data-price="399"><div class="ml">200ml</div><div class="price">₹399</div></div>
+        </div>
+        <a href="#" class="btn btn-gold" id="amlaAddBtn">Add to Cart</a>
+      </div>
+
+      <div class="vcard">
+        <div class="vart">
+          <svg viewBox="0 0 160 280" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="hibGlass" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#5a1f34"/>
+                <stop offset="100%" stop-color="#1A1015"/>
+              </linearGradient>
+            </defs>
+            <rect x="48" y="8" width="64" height="32" rx="5" fill="#C9A227"/>
+            <path d="M40 40 h80 v190 a40 40 0 0 1 -40 40 a40 40 0 0 1 -40 -40 z" fill="url(#hibGlass)" stroke="#D97A9C" stroke-width="1.5"/>
+            <g opacity="0.85">
+              <ellipse cx="80" cy="140" rx="9" ry="18" fill="#E38FAE" transform="rotate(0 80 140)"/>
+              <ellipse cx="80" cy="140" rx="9" ry="18" fill="#E38FAE" transform="rotate(72 80 140)"/>
+              <ellipse cx="80" cy="140" rx="9" ry="18" fill="#E38FAE" transform="rotate(144 80 140)"/>
+              <ellipse cx="80" cy="140" rx="9" ry="18" fill="#E38FAE" transform="rotate(216 80 140)"/>
+              <ellipse cx="80" cy="140" rx="9" ry="18" fill="#E38FAE" transform="rotate(288 80 140)"/>
+              <circle cx="80" cy="140" r="5" fill="#C9A227"/>
+            </g>
+            <text x="80" y="200" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="14" fill="#E38FAE">Hibiscus</text>
+          </svg>
+        </div>
+        <h3>Hibiscus</h3>
+        <div class="vtag">The grower</div>
+        <ul>
+          <li>Stimulates follicles to encourage faster, thicker growth</li>
+          <li>Slows premature greying with regular use</li>
+          <li>Conditions deeply, leaving hair soft and manageable</li>
+          <li>Balances oil production at the scalp</li>
+        </ul>
+        <div class="sizes" id="hibiscusSizes">
+          <div class="size active" data-size="100ml" data-price="299"><div class="ml">100ml</div><div class="price">₹299</div></div>
+          <div class="size" data-size="200ml" data-price="399"><div class="ml">200ml</div><div class="price">₹399</div></div>
+        </div>
+        <a href="#" class="btn btn-gold" id="hibiscusAddBtn">Add to Cart</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  (function(){
+    function wireCard(flavor, sizesId, btnId){
+      var sizesEl = document.getElementById(sizesId);
+      var btn = document.getElementById(btnId);
+      var selected = sizesEl.querySelector('.size.active');
+      sizesEl.addEventListener('click', function(e){
+        var opt = e.target.closest('.size'); if(!opt) return;
+        sizesEl.querySelectorAll('.size').forEach(function(s){s.classList.remove('active');});
+        opt.classList.add('active');
+        selected = opt;
+      });
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        var size = selected.dataset.size;
+        var price = parseInt(selected.dataset.price, 10);
+        if(window.qoAddToCart){
+          window.qoAddToCart(flavor, size, price);
+          var original = btn.textContent;
+          btn.textContent = 'Added ✓';
+          setTimeout(function(){ btn.textContent = original; }, 900);
+        }
+      });
+    }
+    wireCard('Amla', 'amlaSizes', 'amlaAddBtn');
+    wireCard('Hibiscus', 'hibiscusSizes', 'hibiscusAddBtn');
+  })();
+</script>
+
+<section class="ritual" id="ritual">
+  <div class="wrap">
+    <div>
+      <h2>The ritual</h2>
+      <p style="color:rgba(43,27,46,0.78); max-width:44ch;">Twice a week is enough to notice the difference. Slow down — this is the part of the routine meant to be savored.</p>
+    </div>
+    <ul class="steps">
+      <li><span>Warm a few drops between your palms until fragrant.</span></li>
+      <li><span>Massage into the scalp in slow circles for two minutes.</span></li>
+      <li><span>Work the remainder through mid-lengths to ends.</span></li>
+      <li><span>Leave for at least thirty minutes, or overnight for deep treatment.</span></li>
+    </ul>
+  </div>
+</section>
+
+<div class="quote">
+  <p>"It's the first product that's made my hair feel like it belongs to royalty — not a routine."</p>
+  <span>EARLY CUSTOMER</span>
+</div>
+
+<div class="divider"></div>
+
+<section class="gift" id="gift">
+  <div class="wrap">
+    <div class="gift-art">
+      <svg viewBox="0 0 240 220" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="boxTop" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#4a3a26"/>
+            <stop offset="100%" stop-color="#2B1F1A"/>
+          </linearGradient>
+          <linearGradient id="boxFront" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#3a2c1c"/>
+            <stop offset="100%" stop-color="#20150f"/>
+          </linearGradient>
+        </defs>
+        <polygon points="30,70 120,40 210,70 120,100" fill="url(#boxTop)"/>
+        <polygon points="30,70 120,100 120,190 30,160" fill="url(#boxFront)"/>
+        <polygon points="210,70 120,100 120,190 210,160" fill="#170f0a"/>
+        <polygon points="105,70 135,60 135,190 105,200" fill="#9C7A1E" opacity="0.9"/>
+        <polygon points="30,70 120,40 210,70 120,100" fill="none" stroke="#B8934A" stroke-width="0.75" opacity="0.4"/>
+        <path d="M100 42 q20 -34 20 0 q0 -34 20 0" fill="none" stroke="#B8934A" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="120" cy="44" r="8" fill="#9C7A1E"/>
+      </svg>
+    </div>
+    <div>
+      <h2>Gifted, not just given</h2>
+      <p>Every Queen &amp; Oil order can be wrapped and sent as a gift — a ribboned box with a handwritten note, ready to hand over as it is.</p>
+      <p>Built for birthdays, weddings, and the quiet gesture of telling someone they're worth the good stuff.</p>
+      <a href="#checkout" class="btn btn-gold">Send as a Gift</a>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="checkout" id="checkout">
+  <div class="wrap">
+    <div class="head">
+      <h2>Checkout — pay by bank transfer</h2>
+      <p style="color:rgba(43,27,46,0.7); margin-top:10px;">Choose your flavor and size, add your details, and place the order right here — then transfer the amount to the account below.</p>
+    </div>
+
+    <div class="order-box" id="orderBox">
+      <div class="field">
+        <div class="field-label">FLAVOR</div>
+        <div class="opt-row" id="flavorRow">
+          <div class="opt active" data-flavor="Amla">Amla</div>
+          <div class="opt" data-flavor="Hibiscus">Hibiscus</div>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">SIZE</div>
+        <div class="opt-row" id="sizeRow">
+          <div class="opt active" data-size="100ml" data-price="299">100ml — ₹299</div>
+          <div class="opt" data-size="200ml" data-price="399">200ml — ₹399</div>
+        </div>
+      </div>
+      <a href="#" id="addCartBtn" class="btn btn-ghost" style="width:100%; text-align:center;">Add to Cart</a>
+
+      <div class="field" style="margin-top:8px;">
+        <div class="field-label">YOUR CART</div>
+        <div class="cart-list" id="cartList">
+          <div class="cart-empty" id="cartEmpty">Your cart is empty — add a flavor above.</div>
+        </div>
+      </div>
+
+      <div class="order-total">
+        <span class="label">Total</span>
+        <span class="amt">₹<span id="orderPrice">0</span></span>
+      </div>
+
+      <div class="field" style="margin-top:8px;">
+        <div class="field-label">YOUR DETAILS</div>
+        <input type="text" id="custName" placeholder="Full name">
+        <input type="tel" id="custPhone" placeholder="Phone number">
+        <textarea id="custAddress" rows="2" placeholder="Delivery address"></textarea>
+      </div>
+      <div class="gift-toggle" id="giftToggle">
+        <div class="box" id="giftBox"></div>
+        <span>Send as a gift — wrap in a ribboned box, free</span>
+      </div>
+      <div class="gift-fields" id="giftFields">
+        <textarea id="giftNote" rows="2" placeholder="Gift message (optional)"></textarea>
+      </div>
+      <a href="#" id="orderBtn" class="btn btn-gold">Place Order</a>
+      <p class="order-msg" id="orderMsg">Order placed! Transfer the amount below to confirm.</p>
+    </div>
+
+    <div class="admin-panel" id="adminPanel">
+      <h3>Recent Orders</h3>
+      <div id="adminList"></div>
+    </div>
+
+    <script>
+      (function(){
+        var flavor = "Amla", size = "100ml", price = 299;
+        var flavorRow = document.getElementById('flavorRow');
+        var sizeRow = document.getElementById('sizeRow');
+        var addCartBtn = document.getElementById('addCartBtn');
+        var cartList = document.getElementById('cartList');
+        var priceEl = document.getElementById('orderPrice');
+        var cartCountEl = document.getElementById('cartCount');
+        var orderBtn = document.getElementById('orderBtn');
+        var orderBox = document.getElementById('orderBox');
+        var orderMsg = document.getElementById('orderMsg');
+        var db = null, user = null;
+        var isGift = false;
+        var giftToggle = document.getElementById('giftToggle');
+        var giftBox = document.getElementById('giftBox');
+        var giftFields = document.getElementById('giftFields');
+        var cart = [];
+
+        try{
+          var saved = localStorage.getItem('qo_cart');
+          if(saved) cart = JSON.parse(saved);
+        }catch(e){ cart = []; }
+
+        function saveCart(){
+          try{ localStorage.setItem('qo_cart', JSON.stringify(cart)); }catch(e){}
+        }
+
+        function renderCart(){
+          cartList.innerHTML = '';
+          if(cart.length === 0){
+            cartList.innerHTML = '<div class="cart-empty">Your cart is empty — add a flavor above.</div>';
+          } else {
+            cart.forEach(function(item, idx){
+              var row = document.createElement('div');
+              row.className = 'cart-item';
+              row.innerHTML = '<span class="ci-name">' + item.flavor + ' — ' + item.size +
+                ' <span class="qty">×' + item.qty + '</span></span>' +
+                '<span class="ci-right"><span class="ci-price">₹' + (item.price * item.qty) + '</span>' +
+                '<span class="ci-remove" data-idx="' + idx + '">Remove</span></span>';
+              cartList.appendChild(row);
+            });
+          }
+          var total = cart.reduce(function(sum, i){ return sum + i.price * i.qty; }, 0);
+          var count = cart.reduce(function(sum, i){ return sum + i.qty; }, 0);
+          priceEl.textContent = total;
+          cartCountEl.textContent = count;
+          saveCart();
+        }
+
+        cartList.addEventListener('click', function(e){
+          var rm = e.target.closest('.ci-remove'); if(!rm) return;
+          cart.splice(parseInt(rm.dataset.idx, 10), 1);
+          renderCart();
+        });
+
+        flavorRow.addEventListener('click', function(e){
+          var opt = e.target.closest('.opt'); if(!opt) return;
+          flavorRow.querySelectorAll('.opt').forEach(function(o){o.classList.remove('active');});
+          opt.classList.add('active'); flavor = opt.dataset.flavor;
+        });
+        sizeRow.addEventListener('click', function(e){
+          var opt = e.target.closest('.opt'); if(!opt) return;
+          sizeRow.querySelectorAll('.opt').forEach(function(o){o.classList.remove('active');});
+          opt.classList.add('active'); size = opt.dataset.size;
+          price = parseInt(opt.dataset.price, 10);
+        });
+
+        addCartBtn.addEventListener('click', function(e){
+          e.preventDefault();
+          window.qoAddToCart(flavor, size, price);
+        });
+
+        window.qoAddToCart = function(f, s, p){
+          var existing = cart.find(function(i){ return i.flavor === f && i.size === s; });
+          if(existing){ existing.qty += 1; }
+          else { cart.push({flavor: f, size: s, price: p, qty: 1}); }
+          renderCart();
+        };
+
+        giftToggle.addEventListener('click', function(){
+          isGift = !isGift;
+          giftToggle.classList.toggle('on', isGift);
+          giftBox.textContent = isGift ? '✓' : '';
+          giftFields.classList.toggle('show', isGift);
+        });
+
+        orderBtn.addEventListener('click', async function(e){
+          e.preventDefault();
+          if(cart.length === 0){
+            alert('Add at least one item to your cart first.');
+            return;
+          }
+          var name = document.getElementById('custName').value.trim();
+          var phone = document.getElementById('custPhone').value.trim();
+          var address = document.getElementById('custAddress').value.trim();
+          if(!name || !phone || !address){
+            alert('Please fill in your name, phone, and address.');
+            return;
+          }
+          var total = cart.reduce(function(sum, i){ return sum + i.price * i.qty; }, 0);
+          orderBtn.textContent = 'Placing order...';
+          try{
+            if(db){
+              await db.collection('orders').add({
+                items: cart, total: total,
+                name: name, phone: phone, address: address,
+                isGift: isGift, giftNote: document.getElementById('giftNote').value.trim(),
+                status: 'pending', createdAt: Date.now()
+              });
+            }
+            orderBox.classList.add('submitted');
+            orderMsg.style.display = 'block';
+            orderBtn.textContent = 'Place Order';
+            document.getElementById('custName').value = '';
+            document.getElementById('custPhone').value = '';
+            document.getElementById('custAddress').value = '';
+            cart = [];
+            renderCart();
+          }catch(err){
+            orderBtn.textContent = 'Place Order';
+            alert('Could not place order right now — please try again.');
+          }
+        });
+
+        renderCart();
+
+        (async function init(){
+          try{
+            db = await claude.use('db');
+            user = await claude.use('user');
+          }catch(e){}
+          if(user && db && typeof user.isOwner === 'function' && user.isOwner()){
+            var panel = document.getElementById('adminPanel');
+            var list = document.getElementById('adminList');
+            panel.classList.add('show');
+            db.collection('orders').orderBy('createdAt','desc').limit(30).onSnapshot(function(snap){
+              list.innerHTML = '';
+              snap.docs.forEach(function(doc){
+                var o = doc.data();
+                var itemsText = (o.items || []).map(function(i){
+                  return i.flavor + ' ' + i.size + ' ×' + i.qty;
+                }).join(', ');
+                var row = document.createElement('div');
+                row.className = 'admin-row';
+                row.innerHTML = '<span class="who">' +
+                  (o.name || '') + ' · ' + (o.phone || '') + '</span>' +
+                  '<span class="what">' + itemsText + ' — ₹' + (o.total||'') + '</span>';
+                list.appendChild(row);
+              });
+              if(snap.docs.length === 0){ list.textContent = 'No orders yet.'; }
+            }, function(){});
+          }
+        })();
+      })();
+    </script>
+
+    <div class="pay-card">
+      <div class="row"><span class="label">Account Holder</span><span class="value">Queen &amp; Oil</span></div>
+      <div class="row"><span class="label">Bank</span><span class="value">HDFC Bank</span></div>
+      <div class="row"><span class="label">Account Number</span><span class="value">50100814385201</span></div>
+      <div class="row"><span class="label">IFSC Code</span><span class="value">HDFC0003781</span></div>
+    </div>
+    <p class="pay-note">Please double-check the account number and IFSC before transferring. We'll dispatch your order once payment is confirmed.</p>
+  </div>
+</section>
+
+<section class="cta-band" id="order">
+  <div class="wrap">
+    <h2>Your crown deserves this.</h2>
+    <p>Queen &amp; Oil ships in small batches — reserve yours before the next one sells out.</p>
+    <a href="#checkout" class="btn btn-gold">Order Now</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="logo">Queen &amp; Oil</div>
+    <div class="fine">&copy; 2026 Queen &amp; Oil. Handmade in small batches. · Orders: <a href="tel:936187766">93618 7766</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
